@@ -1,0 +1,40 @@
+*Things remaining*
+MRP
+- Add time to comments - in progress
+- medication reminder feature
+- video player implementation -  done
+- videos tips route Done
+- health article route Done
+
+
+ZINO
+- health record route (missing endpoints)
+- Error handling widget for all future builder - Done
+- setDeviceToken endpoint (Need onesignal App ID) - done
+- increment medplan coins endpoint
+    - health diary(0.5) done
+    - health article(0.5) done
+    - video tip(0.5) done
+    - health record(0.5)
+    - taking medication(1)
+    
+
+_______
+* Set new appointments: the text style and size doesn't match UI
+* When viewing dependants profile, the add button does nothing
+* The comment field in healthh tips doesnt match and the content padding for the textfield
+* The search button in health tips page goes nowhere
+
+* Auth page
+* Create and use one 'buildAddBottomSheet' and just pass the buutton onPressed as a function
+    >> Use the widget in pulse_rate.dart
+
+
+
+                  recognizer: TapGestureRecognizer()
+                    ..onTap = () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (_) => SetMedicationReminderStepOne()),
+                      );
+                    },

@@ -1,0 +1,145 @@
+import 'dart:convert';
+import 'dart:io';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:medplan/api/health_articles_service.dart';
+import 'package:medplan/screens/health_tips/health_articles/health_article_widgets.dart';
+import 'package:medplan/utils/global.dart';
+
+import 'package:http/http.dart' as http;
+
+import '../../../server/health_tips_api_requests.dart';
+
+class SearchHealthArticles extends StatefulWidget {
+  const SearchHealthArticles({super.key});
+
+  @override
+  SearchHealthArticlesState createState() => SearchHealthArticlesState();
+}
+
+class SearchHealthArticlesState extends State<SearchHealthArticles> {
+  List<dynamic> healthArticleList = <dynamic>[];
+  List<dynamic> result = <dynamic>[];
+
+  final HealthArticleService _healthArticleService = HealthArticleService();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    loadHealthArticle();
+  }
+
+  bool fetchingHealthArticles = true;
+
+  void loadHealthArticle() async {
+    try {
+      var res = await _healthArticleService.searchHealthArticle();
+      if (res['status'] == 'ok') {
+        setState(() {
+          healthArticleList = res['messages'];
+        });
+      }
+    } catch (e) {
+      print(e);
+      helperWidget.showToast(
+        'oOps an error occurred while fetching health articles',
+      );
+      Navigator.pop(context);
+    } finally {
+      setState(() {
+        fetchingHealthArticles = false;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: helperWidget.myAppBar(context, 'Search Health Article'),
+      body:
+          fetchingHealthArticles
+              ? Center(
+                child: Text(
+                  'Fetching health articles...',
+                  style: TextStyle(
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14.sp,
+                  ),
+                ),
+              )
+              : ListView(
+                padding: EdgeInsets.only(top: 5),
+
+                children: [
+                  SizedBox(
+                    height: 40,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: TextField(
+                        autofocus: true,
+                        onChanged: (val) {
+                          if (val.isNotEmpty) {
+                            RegExp regex = RegExp(val, caseSensitive: false);
+                            result =
+                                healthArticleList.where((item) {
+                                  return regex.hasMatch(item['title'] ?? '');
+                                }).toList();
+                          } else {
+                            result = [];
+                          }
+                          setState(() {});
+                        },
+                        textCapitalization: TextCapitalization.sentences,
+                        style: TextStyle(fontSize: 14),
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.only(left: 15, top: 14),
+                          hintText: "Type your search here",
+                          fillColor: Theme.of(context).shadowColor,
+                          filled: true,
+                          hintStyle: TextStyle(
+                            color: Colors.grey,
+                            fontWeight: FontWeight.w300,
+                            fontSize: 14,
+                          ),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  result.isEmpty
+                      ? Padding(
+                        padding: const EdgeInsets.only(top: 100.0),
+                        child: Center(
+                          child: Text('No health articles match your search'),
+                        ),
+                      )
+                      : ListView.separated(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 18,
+                          vertical: 15,
+                        ),
+                        itemCount: result.length,
+                        separatorBuilder: (context, index) {
+                          return const SizedBox(height: 10);
+                        },
+                        itemBuilder: (context, index) {
+                          return HealthArticleWidgets()
+                              .buildHealthArticleWidget(
+                                context,
+                                result[index],
+                                result,
+                              );
+                        },
+                      ),
+                ],
+              ),
+    );
+  }
+}
