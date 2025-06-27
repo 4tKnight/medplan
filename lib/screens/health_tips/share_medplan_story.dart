@@ -240,6 +240,7 @@ class _ShareMedplanStoryState extends State<ShareMedplanStory> {
         "token": getX.read(v.TOKEN),
         'story': storyDetailsController.text,
         'title': storyTitleController.text,
+        'fullname': getX.read(v.GETX_USERNAME),
       });
 
       if (pickedImage != null) {

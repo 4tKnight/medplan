@@ -1,3 +1,5 @@
+import 'package:medplan/utils/functions.dart';
+
 import '../utils/global.dart';
 import 'api_client.dart';
 import 'endpoints.dart';
@@ -24,7 +26,7 @@ class MedicationReminderService {
       'reminder_time': reminderTime,
       'dosage_form': dosageForm,
       'is_dependent': isDependent,
-      'dependent_id':dependentId,
+      'dependent_id': dependentId,
       'dosage_quantity': dosageQuantity,
       'daily_dosage': dailyDosage,
       'duration': duration,
@@ -32,7 +34,9 @@ class MedicationReminderService {
       'additional_instructions': additionalInstructions,
     };
     final response = await _apiClient.httpPost(
-        Endpoints.addMedicationReminder, reminderData);
+      Endpoints.addMedicationReminder,
+      reminderData,
+    );
     return response;
   }
 
@@ -60,7 +64,9 @@ class MedicationReminderService {
       'additional_instructions': additionalInstructions,
     };
     final response = await _apiClient.httpPost(
-        Endpoints.editMedicationReminder, reminderData);
+      Endpoints.editMedicationReminder,
+      reminderData,
+    );
     return response;
   }
 
@@ -72,18 +78,25 @@ class MedicationReminderService {
       'medication_reminder_id': medicationReminderID,
     };
     final response = await _apiClient.httpPost(
-        Endpoints.deleteMedicationReminder, reminderData);
+      Endpoints.deleteMedicationReminder,
+      reminderData,
+    );
     return response;
   }
 
-  Future<dynamic> viewTodaysMedicationReminders({required String medFor,required String forId}) async {
+  Future<dynamic> viewTodaysMedicationReminders({
+    required String medFor,
+    required String forId,
+  }) async {
     Map<String, dynamic> reminderData = {
       'token': getX.read(v.TOKEN),
-      'med_for':medFor,
-      'for_id':forId,
+      'med_for': medFor,
+      'for_id': forId,
     };
     final response = await _apiClient.httpPost(
-        Endpoints.viewTodaysMedicationReminders, reminderData);
+      Endpoints.viewTodaysMedicationReminders,
+      reminderData,
+    );
     return response;
   }
 
@@ -99,25 +112,28 @@ class MedicationReminderService {
       'day': day,
       'month': month,
       'year': year,
-         'med_for':medFor,
-      'dependent_id':dependentId,
+      'med_for': medFor,
+      'dependent_id': dependentId,
     };
     final response = await _apiClient.httpPost(
-        Endpoints.viewMedicationHistory, reminderData);
+      Endpoints.viewMedicationHistory,
+      reminderData,
+    );
     return response;
   }
 
-  Future<dynamic> searchMedicine({
-    required String drugName,
-  }) async {
+  Future<dynamic> searchMedicine({required String drugName}) async {
     Map<String, dynamic> reminderData = {
       'token': getX.read(v.TOKEN),
       'drug_name': drugName,
     };
-    final response =
-        await _apiClient.httpPost(Endpoints.searchMedicine, reminderData);
+    final response = await _apiClient.httpPost(
+      Endpoints.searchMedicine,
+      reminderData,
+    );
     return response;
   }
+
   Future<dynamic> skipMedication({
     required String medicationReminderId,
     required String duration,
@@ -128,14 +144,17 @@ class MedicationReminderService {
     Map<String, dynamic> reminderData = {
       'token': getX.read(v.TOKEN),
       'medication_reminder_id': medicationReminderId,
-      'skip_reason':skipReason,
-      'duration':duration,
-      'dose':dose,
+      'skip_reason': skipReason,
+      'duration': duration,
+      'dose': dose,
     };
-    final response =
-        await _apiClient.httpPost(Endpoints.skipMedication, reminderData);
+    final response = await _apiClient.httpPost(
+      Endpoints.skipMedication,
+      reminderData,
+    );
     return response;
   }
+
   Future<dynamic> takeMedication({
     required String medicationReminderId,
     required String duration,
@@ -144,12 +163,13 @@ class MedicationReminderService {
     Map<String, dynamic> reminderData = {
       'token': getX.read(v.TOKEN),
       'medication_reminder_id': medicationReminderId,
-      'duration':duration,
-      'dose':dose,
+      'duration': duration,
+      'dose': dose,
     };
-    final response =
-        await _apiClient.httpPost(Endpoints.takeMedication, reminderData);
+    final response = await _apiClient.httpPost(
+      Endpoints.takeMedication,
+      reminderData,
+    );
     return response;
   }
-
 }

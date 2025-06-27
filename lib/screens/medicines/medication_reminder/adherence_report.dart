@@ -106,9 +106,9 @@ class _AdherenceReportState extends State<AdherenceReport> {
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
               return Center(
                 child: Text(
-                  "No adherence Report for the selected Date",
+                  "No adherence Report for the ${time.getMonthString(month)} $year",
                   style: TextStyle(
-                    fontSize: 16.sp,
+                    fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

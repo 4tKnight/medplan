@@ -60,7 +60,7 @@ class LocalNotificationHelper {
       FlutterLocalNotificationsPlugin();
   Future<void> initializeNotifications() async {
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/launcher_icon');
+        AndroidInitializationSettings('notification');
 
     final List<DarwinNotificationCategory> darwinNotificationCategories =
         <DarwinNotificationCategory>[
@@ -111,7 +111,7 @@ class LocalNotificationHelper {
         DarwinInitializationSettings(
           requestAlertPermission: false,
           requestBadgePermission: false,
-          requestSoundPermission: false,
+          requestSoundPermission: true,
           notificationCategories: darwinNotificationCategories,
         );
 
@@ -168,14 +168,14 @@ class LocalNotificationHelper {
 
     AndroidNotificationDetails androidNotificationDetails =
         AndroidNotificationDetails(
-          'MedPlan Pills',
-          'MedPlan',
+          'medplan_${getX.read(v.GETX_NOTI_SOUND)??'casino_win_alarm_and_coins'}',
+          'medplan_${getX.read(v.GETX_NOTI_SOUND)??'casino_win_alarm_and_coins'}',
           channelDescription:
               'This handles all of your pill reminder notifications',
           importance: Importance.max,
-          priority: Priority.max,
+          priority: Priority.high,
           showWhen: false,
-          // sound: RawResourceAndroidNotificationSound("alert"),
+          sound: RawResourceAndroidNotificationSound("${getX.read(v.GETX_NOTI_SOUND)??'casino_win_alarm_and_coins'}"),
           playSound: true,
           ongoing: true,
           autoCancel: true,

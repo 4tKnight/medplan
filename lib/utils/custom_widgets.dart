@@ -655,9 +655,9 @@ class CustomWidgets {
           // month = timeManager.getMonthString(dateSelected.month);
           // year = dateSelected.year;
           // week = timeManager.getWeekNumber(dateSelected);
-          int day = dateSelected.weekday;
+          int day = dateSelected.day;
           int month = dateSelected.month;
-          int year = dateSelected.month;
+          int year = dateSelected.year;
 
           setDateFunc(day, month, year);
         },

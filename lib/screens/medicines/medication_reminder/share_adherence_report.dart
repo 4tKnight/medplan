@@ -22,17 +22,17 @@ class ShareAdherenceReport extends StatefulWidget {
 }
 
 class _ShareAdherenceReportState extends State<ShareAdherenceReport> {
-  late ExportOptions options;
+  // late ExportOptions options;
   late ExportDelegate exportDelegate;
 
   @override
   initState() {
     super.initState();
-    options = ExportOptions(
-      pageFormatOptions: PageFormatOptions.custom(width: 394.w, height: 722.h),
-    );
+    // options = ExportOptions(
+    //   pageFormatOptions: PageFormatOptions.custom(width: 394.w, height: 722.h),
+    // );
     exportDelegate = ExportDelegate(
-      options: options,
+      // options: options,
       ttfFonts: {
         'poppins-normal': 'assets/fonts/Poppins-Regular.ttf',
         'poppins-bold': 'assets/fonts/Poppins-Bold.ttf',
@@ -359,7 +359,7 @@ Warm regards, The MedPlan App Team medPlan.help@gmail.com Fostering Medica
           ),
           SizedBox(height: 7.h),
           Text(
-            '    Total number of Doses: 30',
+            '    Total number of Doses: ${adherenceReportData['total_no_of_doses']}',
             style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12.sp),
           ),
           Row(
@@ -372,7 +372,7 @@ Warm regards, The MedPlan App Team medPlan.help@gmail.com Fostering Medica
               ),
               SizedBox(width: 2.w),
               Text(
-                'Doses taken:    25',
+                'Doses taken:    ${adherenceReportData['total_no_of_doses_taken']}',
                 style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12.sp),
               ),
             ],
@@ -387,7 +387,7 @@ Warm regards, The MedPlan App Team medPlan.help@gmail.com Fostering Medica
               ),
               SizedBox(width: 2.w),
               Text(
-                'Doses missed:   5',
+                "Doses missed:   ${adherenceReportData['total_no_of_doses_skipped']}",
                 style: TextStyle(fontWeight: FontWeight.w400, fontSize: 12.sp),
               ),
             ],

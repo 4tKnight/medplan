@@ -55,13 +55,31 @@ class _NotificationPreferenceState extends State<NotificationPreference> {
     );
   }
 
-@override
-  void dispose() async{
+  @override
+  void dispose() async {
     await player.dispose();
     super.dispose();
   }
 
-  String? selectedSound = constants.notificationSoundAssets.keys.first;
+
+  @override
+  initState(){
+    super.initState();
+   selectedSound = getKeyFromValue('notification_sounds/${getX.read(v.GETX_NOTI_SOUND)??'casino_win_alarm_and_coins'}.wav');
+
+  }
+
+  String? selectedSound ;
+
+  String? getKeyFromValue(String value) {
+    return constants.notificationSoundAssets.entries
+        .firstWhere(
+          (entry) => entry.value == value,
+          orElse: () => const MapEntry('', ''),
+        )
+        .key;
+  }
+
 
   final player = AudioPlayer();
   Widget _buildNotificationSound(String name) {
@@ -74,6 +92,8 @@ class _NotificationPreferenceState extends State<NotificationPreference> {
 
         if (soundPath != null) {
           await player.play(AssetSource(soundPath));
+          final fileName = soundPath.split('/').last.split('.').first;
+          getX.write(v.GETX_NOTI_SOUND, fileName);
         }
       },
       child: Padding(

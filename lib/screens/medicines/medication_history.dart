@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:medplan/utils/functions.dart';
 
 import '../../../utils/global.dart';
 import '../../api/medication_reminder_service.dart';
@@ -71,6 +72,8 @@ class _MedicationHistoryState extends State<MedicationHistory> {
             } else {
               if (snapshot.data['count'] > 0) {
                 medicationHistories = snapshot.data['medication_reminders'];
+              } else {
+                medicationHistories = [];
               }
               return medicationHistories.isEmpty
                   ? myWidgets.buildNoMedicationReminderWidget(

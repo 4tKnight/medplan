@@ -889,18 +889,18 @@ class _BuildCompanionTrackeeState extends State<BuildCompanionTrackee> {
         Expanded(
           child: InkWell(
             onTap: () {
-              // Navigator.of(context).push(
-              //   MaterialPageRoute(
-              //     builder: (_) => ViewAsCompanion(companionData: companionData),
-              //   ),
-              // );
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => ViewAsCompanion(companionData: companionData),
+                ),
+              );
             },
             child: Row(
               children: [
                 SvgPicture.asset('assets/companion.svg'),
                 const SizedBox(width: 5),
                 Text(
-                  '${companionData['first_name']}',
+                  '${companionData['user_fullname']}',
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 14.sp,
@@ -1257,18 +1257,18 @@ class _BuildCompanionsState extends State<BuildCompanions> {
         Expanded(
           child: InkWell(
             onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (_) => ViewAsCompanion(companionData: companionData),
-                ),
-              );
+              // Navigator.of(context).push(
+              //   MaterialPageRoute(
+              //     builder: (_) => ViewAsCompanion(companionData: companionData),
+              //   ),
+              // );
             },
             child: Row(
               children: [
                 SvgPicture.asset('assets/companion.svg'),
                 const SizedBox(width: 5),
                 Text(
-                  '${companionData['first_name']}',
+                  '${companionData['companion_user_name']}',
                   style: TextStyle(
                     fontWeight: FontWeight.w400,
                     fontSize: 14.sp,

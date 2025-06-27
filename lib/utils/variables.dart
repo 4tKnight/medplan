@@ -20,6 +20,10 @@ class Variables {
   String GETX_SURGERIES = "surgeries";
   String GETX_FAMILY_CONDITIONS = "family_conditions";
   
+  
+  String GETX_NOTI_SOUND = "notification_sound";
+
+  
 
   String GETX_USER_ID = "_id";
   String GETX_USER = "user";

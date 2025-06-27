@@ -297,22 +297,22 @@ class Constants {
 
   Map<String, String> notificationSoundAssets = {
     "Casino win alarm and coins":
-        "notification_sounds/casino-win-alarm-and-coins.wav",
-    "classic alarm": "notification_sounds/classic-alarm.wav",
+        "notification_sounds/casino_win_alarm_and_coins.wav",
+    "classic alarm": "notification_sounds/classic_alarm.wav",
     "Digital clock digital alarm buzzer":
-        "notification_sounds/digital-clock-digital-alarm-buzzer.wav",
-    "Drumming jungle music": "notification_sounds/drumming-jungle-music.wav",
-    "Game level music": "notification_sounds/game-level-music.wav",
-    "Marimba ringtone": "notification_sounds/marimba-ringtone.wav",
+        "notification_sounds/digital_clock_digital_alarm_buzzer.wav",
+    "Drumming jungle music": "notification_sounds/drumming_jungle_music.wav",
+    "Game level music": "notification_sounds/game_level_music.wav",
+    "Marimba ringtone": "notification_sounds/marimba_ringtone.wav",
     "Marimba waiting ringtone":
-        "notification_sounds/marimba-waiting-ringtone.wav",
-    "Morning clock alarm": "notification_sounds/morning-clock-alarm.wav",
-    "Slot machine win alarm": "notification_sounds/slot-machine-win-alarm.wav",
+        "notification_sounds/marimba_waiting_ringtone.wav",
+    "Morning clock alarm": "notification_sounds/morning_clock_alarm.wav",
+    "Slot machine win alarm": "notification_sounds/slot_machine_win_alarm.wav",
     "Urgent digital alarm tone":
-        "notification_sounds/urgent-digital-alarm-tone.wav",
+        "notification_sounds/urgent_digital_alarm_tone.wav",
     "Vintage telephone ringtone":
-        "notification_sounds/vintage-telephone-ringtone.wav",
-    "Weird alarm": "notification_sounds/weird-alarm.wav",
+        "notification_sounds/vintage_telephone_ringtone.wav",
+    "Weird alarm": "notification_sounds/weird_alarm.wav",
   };
 
 

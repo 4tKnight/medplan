@@ -181,6 +181,7 @@ class _LoginState extends State<Login> with SingleTickerProviderStateMixin {
                 children: [
                   // const SizedBox(height: 20),
                   TextField(
+                    // stylusHandwritingEnabled: ,
                     decoration: const InputDecoration(
                       hintText: "Enter a Username",
                       hintStyle: TextStyle(color: Colors.black45, fontSize: 14),

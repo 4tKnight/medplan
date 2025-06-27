@@ -67,8 +67,8 @@ class _MyAppState extends State<MyApp> {
             designSize: const Size(414, 918),
             minTextAdapt: true,
             splitScreenMode: true,
-            enableScaleText:   () => true,
-  ensureScreenSize: true,    
+            enableScaleText: () => true,
+            ensureScreenSize: true,
             builder: (_, child) {
               return MaterialApp(
                 navigatorKey: navigatorKey,

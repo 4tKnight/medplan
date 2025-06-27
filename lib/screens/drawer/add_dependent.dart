@@ -6,6 +6,7 @@ import 'package:http_parser/http_parser.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:medplan/screens/drawer/privacy_policy.dart';
 import 'package:medplan/utils/functions.dart';
 import 'package:medplan/utils/global.dart';
 
@@ -341,7 +342,9 @@ class _AddDependentState extends State<AddDependent> {
                     decoration: TextDecoration.underline,
                     decorationColor: Colors.black.withValues(alpha: 0.7),
                   ),
-                  recognizer: TapGestureRecognizer()..onTap = () {},
+                  recognizer: TapGestureRecognizer()..onTap = () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (_) => PrivacyPolicy()));
+                  },
                 ),
               ],
             ),

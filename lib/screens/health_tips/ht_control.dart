@@ -26,8 +26,7 @@ class HealthTipsControl extends StatefulWidget {
 }
 
 class HealthTipsControlState extends State<HealthTipsControl>
-    with SingleTickerProviderStateMixin {
-  late int index;
+     {
 
   @override
   initState() {

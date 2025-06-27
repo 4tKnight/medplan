@@ -94,7 +94,7 @@ class _PrivacyPolicyState extends State<PrivacyPolicy> {
           'We do not sell, rent, or share your personal information with third parties except:',
           style: TextStyle(fontWeight: FontWeight.w400, fontSize: 14.sp),
         ),
-        myWidgets.buildBulletPoint('HWith your explicit consent.'),
+        myWidgets.buildBulletPoint('With your explicit consent.'),
         myWidgets.buildBulletPoint(
           'With licensed healthcare professionals who are bound by confidentiality agreements.',
         ),

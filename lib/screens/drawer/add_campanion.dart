@@ -471,7 +471,7 @@ class _AddCompanionState extends State<AddCompanion> {
         'companion_doc_id':
             widget.companionData == null ? '' : widget.companionData['_id'],
         'fullname': _nameController.text.trim(),
-        'user_fullname': _nameController.text.trim(),
+        'user_fullname': getX.read(v.GETX_USERNAME),
         'phone_no': _phoneNoController.text.trim(),
         'relationship': _relationship,
         'email': selectedUser['email'],
