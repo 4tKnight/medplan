@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:core';
 import 'dart:io';
 import 'dart:math';
@@ -86,24 +87,38 @@ class ChatWithPharmacistState extends State<ChatWithPharmacist> {
   final ChatService _chatService = ChatService();
 
   checkIfNewConversation() async {
+    final cachedData = getX.read(v.CACHED_CONV_ID);
+    if (cachedData != null && cachedData.isNotEmpty) {
+      isNewConv = false;
+      conversationID = cachedData;
+      _connectSocket();
+      _getPreviousMessages();
+    }
+
     try {
       var res = await _chatService.checkConvers();
       my_log(res);
       if (res != null) {
         if (res['msg'] == "Success") {
-          isNewConv = false;
-          conversationID = res['conversation_id'];
-          print('>>>>>>>>>>>>>>>>>>>>>>> convID: ${res['conversation_id']} ');
-          _connectSocket();
-          _getPreviousMessages();
+          if (cachedData == null) {
+            getX.write(v.CACHED_CONV_ID, res['conversation_id']);
+            isNewConv = false;
+            conversationID = res['conversation_id'];
+            print('>>>>>>>>>>>>>>>>>>>>>>> convID: ${res['conversation_id']} ');
+            _connectSocket();
+            _getPreviousMessages();
+          }
         } else if (res['msg'] == "created new conversation") {
-          showImportantNoticeDialog();
-          print('created new conversation');
-          isNewConv = true;
-          conversationID = res['conversation_id'];
-          _connectSocket();
-          _streamController.add([]);
-          setState(() => checkingIfUsersHavePreviousConversation = false);
+          if (cachedData == null) {
+            getX.write(v.CACHED_CONV_ID, res['conversation_id']);
+            showImportantNoticeDialog();
+            print('created new conversation');
+            isNewConv = true;
+            conversationID = res['conversation_id'];
+            _connectSocket();
+            _streamController.add([]);
+            setState(() => checkingIfUsersHavePreviousConversation = false);
+          }
         } else if (res['msg'] == "insufficient medplan coins") {
           Navigator.pop(context);
           showNoCoinLeftDialog();
@@ -127,25 +142,37 @@ class ChatWithPharmacistState extends State<ChatWithPharmacist> {
   int pagec = 1;
 
   _getPreviousMessages() async {
+    final cachedData = getX.read(v.CACHED_MESSAGES);
+
+    if (cachedData != null) {
+      _streamController.add(cachedData["messages"] ?? []);
+      setState(() => checkingIfUsersHavePreviousConversation = false);
+      if (cachedData['messages'] != null && cachedData['messages'].isNotEmpty) {
+        Future.delayed(const Duration(milliseconds: 700), () {
+          scrollToEnd();
+        });
+      }
+    }
+
     try {
       var res = await _chatService.getMessages(
         convoID: conversationID,
         pagec: pagec,
       );
 
-      print(res);
-      if (res['msg'].toLowerCase() == "success") {
-        print("gotten previous messages");
-        _streamController.add(res["messages"]);
-        setState(() => checkingIfUsersHavePreviousConversation = false);
-        Future.delayed(const Duration(milliseconds: 700), () {
-          scrollToEnd();
-        });
-        // _connectSocket();
-      } else if (res['msg'].toLowerCase() == "no messages found") {
-        print("messages not found");
-        _streamController.add([]);
-        setState(() => checkingIfUsersHavePreviousConversation = false);
+      if (res['status'] == "ok") {
+        if (cachedData == null ||
+            jsonEncode(cachedData['messages']) != jsonEncode(res['messages'])) {
+          my_log("cached messages updated: ${res['messages']}");
+          getX.write(v.CACHED_MESSAGES, res);
+          _streamController.add(res["messages"] ?? []);
+          setState(() => checkingIfUsersHavePreviousConversation = false);
+          if (res['messages'] != null && res['messages'].isNotEmpty) {
+            Future.delayed(const Duration(milliseconds: 700), () {
+              scrollToEnd();
+            });
+          }
+        }
       } else {
         helperWidget.showToast("Check your internet connection and try again.");
       }

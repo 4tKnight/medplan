@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -1180,13 +1182,25 @@ class _HomePageState extends State<HomePage> {
   final ChatService _chatService = ChatService();
   List<dynamic> _conversationList = [];
   Future<void> fetchConversation() async {
+    final cachedData = getX.read(v.CACHED_CONVERSATIONS);
+
+    if (cachedData != null) {
+      setState(() {
+        _conversationList = cachedData['conversations'] ?? [];
+      });
+    }
+
     try {
       var res = await _chatService.getConversations();
-      my_log(res);
       if (res['status'] == 'ok') {
-        setState(() {
-          _conversationList = res['conversations'] ?? [];
-        });
+        if (cachedData == null || jsonEncode(cachedData['conversations']) !=
+                jsonEncode(res['conversations'])) {
+          getX.write(v.CACHED_CONVERSATIONS, res);
+          setState(() {
+            _conversationList = res['conversations'] ?? [];
+          });
+        }
+        
       } else {
         helperWidget.showToast(
           "Oops! Something went wrong while fetching conversations",
@@ -1194,7 +1208,9 @@ class _HomePageState extends State<HomePage> {
       }
     } catch (e) {
       my_log(e);
-      helperWidget.showToast("Oops! Something went wrong.");
+      helperWidget.showToast(
+        "Oops! Something went wrong while fetching conversations",
+      );
     }
   }
 
@@ -1203,25 +1219,43 @@ class _HomePageState extends State<HomePage> {
   bool isMedicationRemindersLoading = false;
   List<dynamic> medicationReminders = [];
   fetchMedicationReminder() async {
-    setState(() {
-      isMedicationRemindersLoading = true;
-    });
+    final cachedData = getX.read(v.CACHED_MEDICATIONS_REMINDER);
+
+    if (cachedData != null) {
+      setState(() {
+        medicationReminders = cachedData['medication_reminders'] ?? [];
+        isMedicationRemindersLoading = false;
+      });
+    } else {
+      setState(() {
+        isMedicationRemindersLoading = true;
+      });
+    }
+
     try {
       var res = await _medicationReminderService.viewTodaysMedicationReminders(
         medFor: 'self',
         forId: 'a',
       );
       if (res['status'] == 'ok') {
-        setState(() {
-          medicationReminders = res['medication_reminders'] ?? [];
-        });
+       
+        if (cachedData == null ||
+            jsonEncode(cachedData['medication_reminders']) !=
+          jsonEncode(res['medication_reminders'])) {
+          getX.write(v.CACHED_MEDICATIONS_REMINDER, res);
+          setState(() {
+            medicationReminders = res['medication_reminders'] ?? [];
+          });
+        }
       } else {
         helperWidget.showToast(
           "Oops! Something went wrong while fetching medication reminders",
         );
       }
     } catch (e) {
-      helperWidget.showToast("Oops! Something went wrong.");
+       helperWidget.showToast(
+          "Oops! Something went wrong while fetching medication reminders",
+        );
     } finally {
       setState(() {
         isMedicationRemindersLoading = false;
@@ -1233,15 +1267,32 @@ class _HomePageState extends State<HomePage> {
   bool isAppointmentLoading = false;
   List<dynamic> appointments = [];
   fetchUpcomingAppointment() async {
-    setState(() {
-      isAppointmentLoading = true;
-    });
+      final cachedData = getX.read(v.CACHED_APPOINTMENTS);
+
+    if (cachedData != null) {
+      setState(() {
+        appointments = cachedData['appointments'] ?? [];
+        isAppointmentLoading = false;
+      });
+    } else {
+      setState(() {
+        isAppointmentLoading = true;
+      });
+    }
+
+   
     try {
       var res = await _appointmentService.viewUpcomingAppointment();
       if (res['status'] == 'ok') {
-        setState(() {
-          appointments = res['appointments'] ?? [];
-        });
+       
+          if (cachedData == null ||
+            jsonEncode(cachedData['appointments']) !=
+                jsonEncode(res['appointments'])) {
+          getX.write(v.CACHED_APPOINTMENTS, res);
+          setState(() {
+            appointments = res['appointments'] ?? [];
+          });
+        }
       } else {
         helperWidget.showToast(
           "Oops! Something went wrong while fetching appointments",
@@ -1260,12 +1311,25 @@ class _HomePageState extends State<HomePage> {
 
   List<dynamic> healthArticles = [];
   fetchHealthArticles() async {
+     final cachedData = getX.read(v.CACHED_HEALTH_ARTICLES);
+
+    if (cachedData != null) {
+      setState(() {
+        healthArticles = cachedData['health_articles'] ?? [];
+      });
+    }
     try {
       var res = await _healthArticleService.viewHealthArticles();
       if (res['status'] == 'ok') {
-        setState(() {
-          healthArticles = res['health_articles'] ?? [];
-        });
+       
+         if (cachedData == null ||
+            jsonEncode(cachedData['health_articles']) !=
+                jsonEncode(res['health_articles'])) {
+          getX.write(v.CACHED_HEALTH_ARTICLES, res);
+          setState(() {
+            healthArticles = res['health_articles'] ?? [];
+          });
+        }
       } else {
         helperWidget.showToast(
           "Oops! Something went wrong while fetching health article",
@@ -1280,12 +1344,25 @@ class _HomePageState extends State<HomePage> {
 
   List<dynamic> videoTips = [];
   fetchVideoTips() async {
+     final cachedData = getX.read(v.CACHED_VIDEO_TIPS);
+
+    if (cachedData != null) {
+      setState(() {
+        videoTips = cachedData['video_tips'] ?? [];
+      });
+    }
     try {
       var res = await _videoTipService.viewVideoTips();
       if (res['status'] == 'ok') {
-        setState(() {
-          videoTips = res['video_tips'] ?? [];
-        });
+       
+         if (cachedData == null ||
+            jsonEncode(cachedData['video_tips']) !=
+                jsonEncode(res['video_tips'])) {
+          getX.write(v.CACHED_VIDEO_TIPS, res);
+          setState(() {
+            videoTips = res['video_tips'] ?? [];
+          });
+        }
       } else {
         helperWidget.showToast(
           "Oops! Something went wrong while fetching video tips",

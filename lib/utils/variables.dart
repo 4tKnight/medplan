@@ -61,6 +61,14 @@ class Variables {
   String CACHED_DEPENDENTS = "cached_dependents";
   String CACHED_COMPANIONS = "cached_companions";
   String CACHED_COMPANION_TRACKEE = "cached_companion_trackee";
+  String CACHED_CONVERSATIONS = "cached_conversations";
+  String CACHED_MEDICATIONS_REMINDER = "cached_medications_reminder";
+  String CACHED_APPOINTMENTS = "cached_appointments";
+  String CACHED_HEALTH_ARTICLES = "cached_health_articles";
+  String CACHED_VIDEO_TIPS = "cached_video_tips";
+  String CACHED_CONV_ID = "cached_conv_id";
+  String CACHED_MESSAGES = "cached_messages";
+  String CACHED_NOTIFICATIONS = "cached_notifications";
 
 }
 

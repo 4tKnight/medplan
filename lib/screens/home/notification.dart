@@ -1,9 +1,12 @@
+import 'dart:convert';
+
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:medplan/api/companion_service.dart';
 import 'package:medplan/api/notification_service.dart';
 import 'package:medplan/helper_widget/loading_widgets.dart';
 import 'package:medplan/screens/bottom_control/bottom_nav_bar.dart';
+import 'package:medplan/utils/functions.dart';
 import 'package:readmore/readmore.dart';
 
 import 'package:flutter/cupertino.dart';
@@ -19,7 +22,7 @@ class NotificationPage extends StatefulWidget {
 
 class _NotificationPageState extends State<NotificationPage> {
   bool read_more = false;
-  Future<dynamic>? getNotificationData;
+  Future<dynamic>? _futureData;
   List<dynamic> returnedNotifications = <dynamic>[];
 
   final NotificationService _notificationService = NotificationService();
@@ -29,7 +32,38 @@ class _NotificationPageState extends State<NotificationPage> {
     // TODO: implement initState
     super.initState();
 
-    getNotificationData = _notificationService.viewNotifications();
+    _futureData = _notificationService.viewNotifications();
+  }
+
+  loadFuture() {
+    final cachedData = getX.read(v.CACHED_NOTIFICATIONS);
+    if (cachedData != null) {
+      _futureData = Future.value(cachedData);
+      fetchAndUpdateCache();
+    } else {
+      _futureData =
+          _notificationService.viewNotifications()..then((data) {
+            if (data != null) {
+              getX.write(v.CACHED_NOTIFICATIONS, data);
+            }
+          });
+    }
+  }
+
+  void fetchAndUpdateCache() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _notificationService.viewNotifications().then((updatedData) async {
+        var currentData = await _futureData;
+        if (updatedData != null &&
+            jsonEncode(updatedData) != jsonEncode(currentData)) {
+          my_log('updating cache');
+          getX.write(v.CACHED_NOTIFICATIONS, updatedData);
+          setState(() {
+            _futureData = Future.value(updatedData);
+          });
+        }
+      });
+    });
   }
 
   @override
@@ -42,7 +76,7 @@ class _NotificationPageState extends State<NotificationPage> {
             SizedBox(height: 16.h),
             Expanded(
               child: FutureBuilder<dynamic>(
-                future: getNotificationData,
+                future: _futureData,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.none) {
                     return const SizedBox();
@@ -62,7 +96,7 @@ class _NotificationPageState extends State<NotificationPage> {
 
                       return helperWidget.noInternetScreen(() {
                         setState(() {
-                          getNotificationData =
+                          _futureData =
                               _notificationService.viewNotifications();
                         });
                       });
@@ -117,7 +151,7 @@ class _NotificationPageState extends State<NotificationPage> {
                       } else {
                         return helperWidget.errorScreen(() {
                           setState(() {
-                            getNotificationData =
+                            _futureData =
                                 _notificationService.viewNotifications();
                           });
                         });
@@ -125,7 +159,7 @@ class _NotificationPageState extends State<NotificationPage> {
                     } else {
                       return helperWidget.errorScreen(() {
                         setState(() {
-                          getNotificationData =
+                          _futureData =
                               _notificationService.viewNotifications();
                         });
                       });
@@ -134,8 +168,7 @@ class _NotificationPageState extends State<NotificationPage> {
                     //BUILD LOADING WIDGET
                     return helperWidget.errorScreen(() {
                       setState(() {
-                        getNotificationData =
-                            _notificationService.viewNotifications();
+                        _futureData = _notificationService.viewNotifications();
                       });
                     });
                   }
@@ -178,7 +211,7 @@ class _NotificationPageState extends State<NotificationPage> {
       if (res['status'] == 'ok') {
         helperWidget.showToast("Notification deleted successfully");
         setState(() {
-          getNotificationData = _notificationService.viewNotifications();
+          _futureData = _notificationService.viewNotifications();
         });
       } else {
         helperWidget.showToast("Oops! Something went wrong.");
