@@ -54,6 +54,14 @@ class Variables {
   String GETX_TOOLS_SEARCH = 'tools_search';
   String FOLLOWINGS = 'followings';
   String APP_VERSION_CODE = 'app_version_code';
+
+
+
+  //cached data key
+  String CACHED_DEPENDENTS = "cached_dependents";
+  String CACHED_COMPANIONS = "cached_companions";
+  String CACHED_COMPANION_TRACKEE = "cached_companion_trackee";
+
 }
 
 class DB {

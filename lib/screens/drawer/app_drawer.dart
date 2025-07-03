@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -813,7 +815,34 @@ class _BuildCompanionTrackeeState extends State<BuildCompanionTrackee> {
   }
 
   loadFuture() {
-    _futureData = _companionService.viewUserTrackees();
+    final cachedData = getX.read(v.CACHED_COMPANION_TRACKEE);
+    if (cachedData != null) {
+      _futureData = Future.value(cachedData);
+      fetchAndUpdateCache();
+    } else {
+      _futureData = _companionService.viewUserTrackees();
+      _futureData!.then((data) {
+        if (data != null) {
+          getX.write(v.CACHED_COMPANION_TRACKEE, data);
+        }
+      });
+    }
+  }
+
+  void fetchAndUpdateCache() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _companionService.viewUserTrackees().then((updatedData) async {
+        var currentData = await _futureData;
+        if (updatedData != null &&
+            jsonEncode(updatedData) != jsonEncode(currentData)) {
+          my_log('updating cache');
+          getX.write(v.CACHED_COMPANION_TRACKEE, updatedData);
+          setState(() {
+            _futureData = Future.value(updatedData);
+          });
+        }
+      });
+    });
   }
 
   @override
@@ -1119,7 +1148,34 @@ class _BuildCompanionsState extends State<BuildCompanions> {
   }
 
   loadFuture() {
-    _futureData = _companionService.viewUsersCompanions();
+    dynamic cachedData = getX.read(v.CACHED_COMPANIONS);
+    if (cachedData != null) {
+      _futureData = Future.value(cachedData);
+      fetchAndUpdateCache();
+    } else {
+      _futureData = _companionService.viewUsersCompanions();
+      _futureData!.then((data) {
+        if (data != null) {
+          getX.write(v.CACHED_COMPANIONS, data);
+        }
+      });
+    }
+  }
+
+  void fetchAndUpdateCache() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _companionService.viewUsersCompanions().then((updatedData) async {
+        var currentData = await _futureData;
+        if (updatedData != null &&
+            jsonEncode(updatedData) != jsonEncode(currentData)) {
+          my_log('updating cache');
+          getX.write(v.CACHED_COMPANIONS, updatedData);
+          setState(() {
+            _futureData = Future.value(updatedData);
+          });
+        }
+      });
+    });
   }
 
   @override
@@ -1504,7 +1560,34 @@ class _BuildDependentsState extends State<BuildDependents> {
   }
 
   loadFuture() {
-    _futureData = _dependentService.viewUsersDependents();
+    final cachedData = getX.read(v.CACHED_DEPENDENTS);
+    if (cachedData != null) {
+      _futureData = Future.value(cachedData);
+      fetchAndUpdateCache();
+    } else {
+      _futureData = _dependentService.viewUsersDependents();
+      _futureData!.then((data) {
+        if (data != null) {
+          getX.write(v.CACHED_DEPENDENTS, data);
+        }
+      });
+    }
+  }
+
+  void fetchAndUpdateCache() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _dependentService.viewUsersDependents().then((updatedData) async {
+        var currentData = await _futureData;
+        if (updatedData != null &&
+            jsonEncode(updatedData) != jsonEncode(currentData)) {
+          my_log('updating cache');
+          getX.write(v.CACHED_DEPENDENTS, updatedData);
+          setState(() {
+            _futureData = Future.value(updatedData);
+          });
+        }
+      });
+    });
   }
 
   @override
@@ -1582,8 +1665,6 @@ class _BuildDependentsState extends State<BuildDependents> {
                     return const SizedBox();
                   } else {
                     dependents = snapshot.data['dependents'];
-
-                    my_log(snapshot.data);
 
                     return dependents.isEmpty
                         ? InkWell(
